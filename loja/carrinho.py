@@ -1,6 +1,7 @@
 """Etapa 5: o carrinho TEM produtos (Aulas 6 e 7)."""
 from .calculos import frete, total_carrinho
 from .produto import Produto
+from .promocao import SemPromocao
 
 
 class CarrinhoFinalizadoError(Exception):
@@ -8,7 +9,8 @@ class CarrinhoFinalizadoError(Exception):
 
 
 class Carrinho:
-    def __init__(self):
+    def __init__(self, promocao=None):
+        self.promocao = promocao or SemPromocao()
         self._itens = []   # pares (produto, quantidade)
         self._finalizado = False
 
@@ -35,7 +37,8 @@ class Carrinho:
 
     @property
     def total(self):
-        return self.subtotal + frete(self.subtotal)
+        subtotal_com_desconto = self.promocao.aplicar(self.subtotal)
+        return subtotal_com_desconto + frete(subtotal_com_desconto)
 
     def finalizar(self):
         if not self._itens:
