@@ -1,7 +1,7 @@
 """Etapa 5: o carrinho TEM produtos (Aulas 6 e 7)."""
 from .calculos import frete, total_carrinho
 from .produto import Produto
-from .promocao import SemPromocao
+from .promocao import Promocao, SemPromocao
 
 
 class CarrinhoFinalizadoError(Exception):
@@ -10,6 +10,8 @@ class CarrinhoFinalizadoError(Exception):
 
 class Carrinho:
     def __init__(self, promocao=None):
+        if promocao is not None and not isinstance(promocao, Promocao):
+            raise TypeError("promoção deve seguir o contrato de Promocao")
         self.promocao = promocao or SemPromocao()
         self._itens = []   # pares (produto, quantidade)
         self._finalizado = False
