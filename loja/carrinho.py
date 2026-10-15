@@ -1,4 +1,4 @@
-"""Etapa 5: o carrinho TEM produtos (Aulas 6 e 7)."""
+"""Etapas 5, 7 e 8: a promoção segue o contrato."""
 from .calculos import frete, total_carrinho
 from .produto import Produto
 from .promocao import Promocao, SemPromocao
@@ -10,11 +10,12 @@ class CarrinhoFinalizadoError(Exception):
 
 class Carrinho:
     def __init__(self, promocao=None):
-        if promocao is not None and not isinstance(promocao, Promocao):
-            raise TypeError("promoção deve seguir o contrato de Promocao")
-        self.promocao = promocao or SemPromocao()
         self._itens = []   # pares (produto, quantidade)
         self._finalizado = False
+        promocao = promocao or SemPromocao()
+        if not isinstance(promocao, Promocao):
+            raise TypeError("a promoção precisa seguir o contrato Promocao")
+        self.promocao = promocao
 
     def adicionar(self, produto, quantidade=1):
         if self._finalizado:
@@ -39,8 +40,8 @@ class Carrinho:
 
     @property
     def total(self):
-        subtotal_com_desconto = self.promocao.aplicar(self.subtotal)
-        return subtotal_com_desconto + frete(subtotal_com_desconto)
+        com_desconto = self.promocao.aplicar(self.subtotal)   # polimorfismo
+        return com_desconto + frete(com_desconto)
 
     def finalizar(self):
         if not self._itens:
