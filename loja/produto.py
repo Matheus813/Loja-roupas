@@ -1,4 +1,4 @@
-"""Etapa 4: o produto vira classe (Aula 6)."""
+"""Etapas 4 e 6: Produto e as roupas que SÃO produtos."""
 
 TAMANHOS = ("PP", "P", "M", "G", "GG")
 
@@ -18,11 +18,21 @@ class Produto:
     def descricao(self):
         return f"{self.nome} {self.tamanho}: R$ {self.preco:.2f}"
 
+    def para_dict(self):
+        """O produto em formato de dicionário, pronto para virar JSON."""
+        return {
+            "tipo": type(self).__name__,
+            "nome": self.nome,
+            "preco": self.preco,
+            "tamanho": self.tamanho,
+        }
+
+
 class Camiseta(Produto):
     MANGAS = ("curta", "longa")
 
     def __init__(self, nome, preco, tamanho, manga):
-        super().__init__(nome, preco, tamanho)
+        super().__init__(nome, preco, tamanho)   # regras do Produto
         if manga not in self.MANGAS:
             raise ValueError(f"manga inválida: {manga}")
         self.manga = manga
@@ -30,10 +40,21 @@ class Camiseta(Produto):
     def descricao(self):
         return f"{super().descricao()} · manga {self.manga}"
 
+    def para_dict(self):
+        dados = super().para_dict()   # o que vale para todo produto
+        dados["manga"] = self.manga
+        return dados
+
+
 class Calca(Produto):
     def __init__(self, nome, preco, tamanho, modelagem):
         super().__init__(nome, preco, tamanho)
         self.modelagem = modelagem
 
     def descricao(self):
-        return f"{super().descricao()} · modelagem {self.modelagem}"
+        return f"{super().descricao()} · {self.modelagem}"
+
+    def para_dict(self):
+        dados = super().para_dict()
+        dados["modelagem"] = self.modelagem
+        return dados

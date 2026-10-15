@@ -19,4 +19,4 @@ def test_manga_invalida():
 
 def test_descricao_sobrescrita_reaproveita_a_mae():
     calca = Calca("Calça jeans", 129.90, "G", "reta")
-    assert calca.descricao() == "Calça jeans G: R$ 129.90 · modelagem reta"
+    assert calca.descricao() == "Calça jeans G: R$ 129.90 · reta"
