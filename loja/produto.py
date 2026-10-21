@@ -32,7 +32,7 @@ class Camiseta(Produto):
     MANGAS = ("curta", "longa")
 
     def __init__(self, nome, preco, tamanho, manga):
-        super().__init__(nome, preco, tamanho)   # regras do Produto
+        super().__init__(nome, preco, tamanho)
         if manga not in self.MANGAS:
             raise ValueError(f"manga inválida: {manga}")
         self.manga = manga
@@ -41,7 +41,7 @@ class Camiseta(Produto):
         return f"{super().descricao()} · manga {self.manga}"
 
     def para_dict(self):
-        dados = super().para_dict()   # o que vale para todo produto
+        dados = super().para_dict()
         dados["manga"] = self.manga
         return dados
 
