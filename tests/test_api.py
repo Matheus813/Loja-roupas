@@ -49,3 +49,20 @@ def test_total_com_promocao_sem_frete():
 def test_total_abaixo_de_200_paga_frete():
     cliente.post("/carrinho/itens", json={"produto_id": 1, "quantidade": 1})
     assert cliente.get("/carrinho/total").json()["total"] == 50.91
+
+@pytest.fixture(autouse=True)
+def banco_de_teste():
+    """Cada teste ganha um banco novo, na memória, com os 3 produtos."""
+    engine = engine_em_memoria()
+    criar_tabelas(engine)
+    with Session(engine) as sessao:
+        popular_se_vazio(ServicoCatalogo(RepositorioProdutos(sessao)))
+
+def sessao_de_teste():
+    with Session(engine) as sessao:
+        yield sessao
+
+    app.dependency_overrides[obter_sessao] = sessao_de_teste
+    cliente.delete("/carrinho")
+    yield
+    app.dependency_overrides.clear()
